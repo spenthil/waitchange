@@ -37,9 +37,11 @@ def main():
 
     if args == []:
         args = [os.getcwd(),]
-    def watch_file(kq, filename):
+    def watch_file(kq, filename,
+      flags = select.KQ_EV_ADD | select.KQ_EV_ENABLE | select.KQ_EV_ONESHOT,
+      fflags = select.KQ_NOTE_WRITE | select.KQ_NOTE_DELETE | select.KQ_NOTE_EXTEND | select.KQ_NOTE_RENAME):
         fd = os.open(filename, os.O_RDONLY)
-        event = [select.kevent(fd, filter=select.KQ_FILTER_VNODE, flags=select.KQ_EV_ADD | select.KQ_EV_ENABLE | select.KQ_EV_ONESHOT, fflags=select.KQ_NOTE_WRITE | select.KQ_NOTE_DELETE | select.KQ_NOTE_EXTEND)]
+        event = [select.kevent(fd, filter=select.KQ_FILTER_VNODE, flags=flags, fflags=fflags)]
         kq.control(event, 0, 0)
         return fd
     kq = select.kqueue()
