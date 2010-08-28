@@ -1,7 +1,7 @@
 Introduction
 ============
 
-waitchange is a simple script that watches the specified files and folders for change. When something does change it exits with code 0.
+waitchange is a simple script that monitors the specified files and folders for change. When something does change it exits with code 0.
 
 	Usage: waitchange [options] filename1 filename2 ...
 
