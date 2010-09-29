@@ -55,13 +55,14 @@ def main():
         events = kq.control([], 1, None)
     except KeyboardInterrupt:
         # keyboard killed, return 1 (fail)
-        return 1
+        retval = 1
     else:
         # something changed, return 0 (success)
-        kq.close()
-        for fd in fds:
-            os.close(fd)
-        return 0
+        retval = 0
+    kq.close()
+    for fd in fds:
+        os.close(fd)
+    return retval
 
 if __name__ == '__main__':
     sys.exit(main())
