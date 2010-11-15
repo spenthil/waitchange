@@ -29,7 +29,7 @@ from optparse import OptionParser
 
 version = "0.1"
 
-def watch_files(filenames, recursive=False):
+def watch_files(filenames):
     def _watch_file(kq, filename, flags = select.KQ_EV_ADD | select.KQ_EV_ENABLE | select.KQ_EV_ONESHOT, fflags = select.KQ_NOTE_WRITE | select.KQ_NOTE_DELETE | select.KQ_NOTE_EXTEND | select.KQ_NOTE_RENAME):
         fd = os.open(filename, os.O_RDONLY)
         event = [select.kevent(fd, filter=select.KQ_FILTER_VNODE, flags=flags, fflags=fflags)]
@@ -44,9 +44,6 @@ def watch_files(filenames, recursive=False):
         # get absolute path if its relative
         filename = os.path.abspath(filename)
         fds[_watch_file(kq, filename)] = filename
-        if recursive and os.path.isdir(filename):
-            for subdir in [x[0] for x in os.walk(filename)]:
-                fds.append(_watch_file(kq, subdir))
     try:
         events = kq.control([], 1, None)
     finally:
@@ -62,11 +59,11 @@ def watch_files(filenames, recursive=False):
 
 if __name__ == '__main__':
     parser = OptionParser(usage="usage: %prog [options] filename1 filename2 ...", version="%prog " + version)
-    parser.add_option("-r", "--recursive", action="store_true", default=False, dest="recursive", help="Watch subfolders as well. Default is to not.")
+    #parser.add_option("-r", "--recursive", action="store_true", default=False, dest="recursive", help="Watch subfolders as well. Default is to not.")
     (options, args) = parser.parse_args()
     if args == []:
         parser.error("must supply at least one file to wait on")
-    results = watch_files(args, recursive=options.recursive)
+    results = watch_files(args)
     print ", ".join(("'" + x + "'" for x in results))
     # if got files return 0, if not return 1
     sys.exit(results == False)
