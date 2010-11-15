@@ -8,22 +8,20 @@ waitchange is a simple script that monitors the specified files and folders for 
 	Options:
 	  --version        show program's version number and exit
 	  -h, --help       show this help message and exit
-	  -r, --recursive  Watch subfolders as well. Default is to not.
 
-The default behavior is to non-recursively watch the current directory. To monitor subdirectories supply the '-r' option. To watch specific files and directories, supply them as arguments.
 
 Examples
 ========
 
 The following examples assumes a bash shell and waitchange (symbolic link to waitchange.py) is in your path.
 
-* When something changes in the current directory or a subdirectory run `scons` (build system). Control-C to exit.
+* When a C++ file changes in the current directory or a subdirectory run `scons` (build system). Control-C to exit.
 
-		while [ $[`waitchange -r`] ]; do scons; done
+		while [ $[`waitchange *.cpp *.hpp`] ]; do scons; done
 
-* Growl notification when a file changes in current directory. Assumes you have growlnotify in your path.
+* Growl notification when "afile.py" changes. Assumes you have growlnotify in your path.
 
-		waitchange && echo 'something changed!' | growlnotify
+		waitchange afile.py && echo 'afile.py changed!' | growlnotify
 
 Installation
 ============
